@@ -1,0 +1,178 @@
+{
+  "meta": {
+    "titulo": "Precificação para Serviços Criativos",
+    "subtitulo": "Da hora vendida ao preço defensável",
+    "autor": "Autora de Exemplo",
+    "idioma": "pt-BR",
+    "versao_ir": "0.1"
+  },
+  "bible": {
+    "publico": "Profissionais autônomos de design e redação, sem formação em finanças",
+    "genero": "Manual prático",
+    "tom": "Direto, sem jargão, com exemplos numéricos",
+    "nivel": "Iniciante em finanças, avançado no próprio ofício",
+    "objetivo": "Levar o leitor de preço por chute a preço com base em custo e margem",
+    "restricoes": [
+      "Nenhuma fórmula que exija planilha para acompanhar",
+      "Todo exemplo em reais, com números redondos"
+    ],
+    "decisoes_editoriais": [
+      "Um exercício ao fim de cada capítulo",
+      "Termos financeiros sempre definidos antes do primeiro uso"
+    ]
+  },
+  "capitulos": [
+    {
+      "id": "cap-01",
+      "numero": 1,
+      "titulo": "O que você está vendendo",
+      "contrato": {
+        "requer": [],
+        "introduz": ["custo fixo", "margem de contribuição"],
+        "nao_repetir": []
+      },
+      "blocos": [
+        { "tipo": "heading", "nivel": 1, "conteudo": "O que você está vendendo", "id": "cap-01-titulo" },
+        {
+          "tipo": "paragraph",
+          "conteudo": [
+            { "tipo": "text", "conteudo": "Quase todo mundo começa vendendo " },
+            { "tipo": "emph", "conteudo": "horas" },
+            { "tipo": "text", "conteudo": ". O problema aparece quando a hora fica boa: você melhora, entrega mais rápido e " },
+            { "tipo": "strong", "conteudo": "ganha menos" },
+            { "tipo": "text", "conteudo": " pelo mesmo trabalho." },
+            { "tipo": "footnote", "conteudo": "Esse é o paradoxo da eficiência cobrada por tempo." }
+          ]
+        },
+        {
+          "tipo": "definition",
+          "termo": "custo fixo",
+          "aliases": ["custos fixos"],
+          "definicao": "Aquilo que você paga todo mês independentemente de fechar um projeto ou nenhum: aluguel, contador, assinaturas, internet."
+        },
+        {
+          "tipo": "definition",
+          "termo": "margem de contribuição",
+          "definicao": [
+            { "tipo": "text", "conteudo": "O que sobra de cada projeto depois de pagar o que aquele projeto especificamente custou. É o dinheiro disponível para cobrir o " },
+            { "tipo": "term_ref", "termo": "custo fixo" },
+            { "tipo": "text", "conteudo": " e, só depois disso, virar lucro." }
+          ],
+          "ver_tambem": ["custo fixo"]
+        },
+        {
+          "tipo": "list",
+          "ordenada": false,
+          "itens": [
+            {
+              "conteudo": "Custos que somem quando o projeto some",
+              "subitens": [
+                { "conteudo": "Licença de fonte comprada para aquele trabalho" },
+                { "conteudo": "Freelancer contratado para uma etapa" }
+              ]
+            },
+            { "conteudo": "Custos que ficam mesmo sem projeto nenhum" }
+          ]
+        },
+        {
+          "tipo": "table",
+          "legenda": "Três meses de um estúdio de duas pessoas",
+          "repetir_cabecalho": true,
+          "colunas": [
+            { "cabecalho": "Mês", "alinhamento": "esquerda", "largura": 1.0 },
+            { "cabecalho": "Receita", "alinhamento": "direita", "largura": 1.2 },
+            { "cabecalho": "Custo fixo", "alinhamento": "direita", "largura": 1.2 }
+          ],
+          "linhas": [
+            ["Janeiro", "R$ 18.000", "R$ 9.000"],
+            ["Fevereiro", "R$ 11.000", "R$ 9.000"],
+            ["Março", "R$ 24.000", "R$ 9.500"]
+          ]
+        },
+        {
+          "tipo": "callout",
+          "variante": "aviso",
+          "titulo": "Antes de seguir",
+          "conteudo": [
+            {
+              "tipo": "paragraph",
+              "conteudo": "Levante seu custo fixo real antes de continuar. Todo o resto do livro depende desse número, e chutá-lo invalida cada conta adiante."
+            }
+          ]
+        },
+        {
+          "tipo": "exercise",
+          "id": "ex-01-01",
+          "dificuldade": "basico",
+          "enunciado": [
+            { "tipo": "paragraph", "conteudo": "Liste tudo que saiu da sua conta no mês passado e separe em duas colunas: sumiria sem projeto, ou continuaria de pé?" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cap-02",
+      "numero": 2,
+      "titulo": "Onde a conta fecha",
+      "contrato": {
+        "requer": ["custo fixo", "margem de contribuição"],
+        "introduz": ["ponto de equilíbrio"],
+        "nao_repetir": ["definição de custo fixo", "paradoxo da hora eficiente"]
+      },
+      "blocos": [
+        { "tipo": "heading", "nivel": 1, "conteudo": "Onde a conta fecha" },
+        {
+          "tipo": "paragraph",
+          "conteudo": [
+            { "tipo": "text", "conteudo": "Com a " },
+            { "tipo": "term_ref", "termo": "margem de contribuição" },
+            { "tipo": "text", "conteudo": " na mão, resta uma pergunta: quantos projetos como esse pagam o mês?" }
+          ]
+        },
+        {
+          "tipo": "definition",
+          "termo": "ponto de equilíbrio",
+          "definicao": "O faturamento em que a margem acumulada iguala exatamente o custo fixo do período. Abaixo dele você paga para trabalhar."
+        },
+        {
+          "tipo": "code",
+          "linguagem": "python",
+          "legenda": "A conta inteira, sem planilha",
+          "numerar_linhas": true,
+          "conteudo": "custo_fixo = 9000\nmargem_por_projeto = 2250\n\nprojetos_necessarios = custo_fixo / margem_por_projeto\nprint(projetos_necessarios)  # 4.0"
+        },
+        {
+          "tipo": "figure",
+          "fonte": "figuras/ponto-de-equilibrio.svg",
+          "alt": "Gráfico de linhas em que a receita acumulada cruza a linha horizontal do custo fixo no quarto projeto.",
+          "legenda": "O cruzamento é o ponto de equilíbrio.",
+          "credito": "Elaboração da autora"
+        },
+        {
+          "tipo": "list",
+          "ordenada": true,
+          "itens": [
+            { "conteudo": "Some seu custo fixo mensal" },
+            { "conteudo": [
+                { "tipo": "text", "conteudo": "Calcule a margem de um projeto típico com " },
+                { "tipo": "code_span", "conteudo": "preço - custos do projeto" }
+              ]
+            },
+            { "conteudo": "Divida um pelo outro e arredonde para cima" }
+          ]
+        },
+        {
+          "tipo": "exercise",
+          "id": "ex-02-01",
+          "dificuldade": "intermediario",
+          "enunciado": [
+            { "tipo": "paragraph", "conteudo": "Seu custo fixo é R$ 6.000 e sua margem por projeto é R$ 1.500. Quantos projetos fecham o mês? E se a margem cair para R$ 1.000?" }
+          ],
+          "resposta": [
+            { "tipo": "paragraph", "conteudo": "Quatro projetos no primeiro caso e seis no segundo. Uma queda de um terço na margem exige metade a mais de volume." }
+          ]
+        }
+      ]
+    }
+  ]
+}

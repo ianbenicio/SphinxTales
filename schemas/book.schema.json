@@ -1,0 +1,1425 @@
+{
+  "$defs": {
+    "Bible": {
+      "additionalProperties": false,
+      "description": "Biblia do livro: o que todo capitulo pode assumir sobre o conjunto.\n\nPreenchida pela entrevista de camada 1 e consumida pelo escritor com estado.",
+      "properties": {
+        "publico": {
+          "minLength": 1,
+          "title": "Publico",
+          "type": "string"
+        },
+        "genero": {
+          "minLength": 1,
+          "title": "Genero",
+          "type": "string"
+        },
+        "tom": {
+          "minLength": 1,
+          "title": "Tom",
+          "type": "string"
+        },
+        "nivel": {
+          "minLength": 1,
+          "title": "Nivel",
+          "type": "string"
+        },
+        "objetivo": {
+          "minLength": 1,
+          "title": "Objetivo",
+          "type": "string"
+        },
+        "restricoes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Restricoes",
+          "type": "array"
+        },
+        "decisoes_editoriais": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Decisoes Editoriais",
+          "type": "array"
+        }
+      },
+      "required": [
+        "publico",
+        "genero",
+        "tom",
+        "nivel",
+        "objetivo"
+      ],
+      "title": "Bible",
+      "type": "object"
+    },
+    "Callout": {
+      "additionalProperties": false,
+      "description": "Caixa destacada, com blocos aninhados.",
+      "properties": {
+        "tipo": {
+          "const": "callout",
+          "default": "callout",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "variante": {
+          "enum": [
+            "nota",
+            "aviso",
+            "dica",
+            "importante",
+            "exemplo"
+          ],
+          "title": "Variante",
+          "type": "string"
+        },
+        "titulo": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "code_span": "#/$defs/CodeSpan",
+                    "emph": "#/$defs/Emph",
+                    "footnote": "#/$defs/Footnote",
+                    "strong": "#/$defs/Strong",
+                    "term_ref": "#/$defs/TermRef",
+                    "text": "#/$defs/Text"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Text"
+                  },
+                  {
+                    "$ref": "#/$defs/Emph"
+                  },
+                  {
+                    "$ref": "#/$defs/Strong"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeSpan"
+                  },
+                  {
+                    "$ref": "#/$defs/TermRef"
+                  },
+                  {
+                    "$ref": "#/$defs/Footnote"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Titulo"
+        },
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "callout": "#/$defs/Callout",
+                "code": "#/$defs/CodeBlock",
+                "definition": "#/$defs/Definition",
+                "exercise": "#/$defs/Exercise",
+                "figure": "#/$defs/Figure",
+                "heading": "#/$defs/Heading",
+                "list": "#/$defs/ListBlock",
+                "paragraph": "#/$defs/Paragraph",
+                "table": "#/$defs/TableBlock"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Paragraph"
+              },
+              {
+                "$ref": "#/$defs/Heading"
+              },
+              {
+                "$ref": "#/$defs/ListBlock"
+              },
+              {
+                "$ref": "#/$defs/TableBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/Figure"
+              },
+              {
+                "$ref": "#/$defs/Callout"
+              },
+              {
+                "$ref": "#/$defs/Definition"
+              },
+              {
+                "$ref": "#/$defs/Exercise"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Conteudo",
+          "type": "array"
+        }
+      },
+      "required": [
+        "variante",
+        "conteudo"
+      ],
+      "title": "Callout",
+      "type": "object"
+    },
+    "Chapter": {
+      "additionalProperties": false,
+      "description": "Capitulo: contrato mais uma lista de blocos.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "numero": {
+          "minimum": 0,
+          "title": "Numero",
+          "type": "integer"
+        },
+        "titulo": {
+          "minLength": 1,
+          "title": "Titulo",
+          "type": "string"
+        },
+        "contrato": {
+          "$ref": "#/$defs/ChapterContract"
+        },
+        "blocos": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "callout": "#/$defs/Callout",
+                "code": "#/$defs/CodeBlock",
+                "definition": "#/$defs/Definition",
+                "exercise": "#/$defs/Exercise",
+                "figure": "#/$defs/Figure",
+                "heading": "#/$defs/Heading",
+                "list": "#/$defs/ListBlock",
+                "paragraph": "#/$defs/Paragraph",
+                "table": "#/$defs/TableBlock"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Paragraph"
+              },
+              {
+                "$ref": "#/$defs/Heading"
+              },
+              {
+                "$ref": "#/$defs/ListBlock"
+              },
+              {
+                "$ref": "#/$defs/TableBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/Figure"
+              },
+              {
+                "$ref": "#/$defs/Callout"
+              },
+              {
+                "$ref": "#/$defs/Definition"
+              },
+              {
+                "$ref": "#/$defs/Exercise"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Blocos",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "numero",
+        "titulo",
+        "blocos"
+      ],
+      "title": "Chapter",
+      "type": "object"
+    },
+    "ChapterContract": {
+      "additionalProperties": false,
+      "description": "Contrato de um capitulo perante os vizinhos.\n\n`requer`: termos que o capitulo assume ja definidos.\n`introduz`: termos que este capitulo define pela primeira vez.\n`nao_repetir`: o que ja foi dito e nao pode voltar.",
+      "properties": {
+        "requer": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requer",
+          "type": "array"
+        },
+        "introduz": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Introduz",
+          "type": "array"
+        },
+        "nao_repetir": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Nao Repetir",
+          "type": "array"
+        }
+      },
+      "title": "ChapterContract",
+      "type": "object"
+    },
+    "CodeBlock": {
+      "additionalProperties": false,
+      "description": "Bloco de codigo literal. O conteudo nunca e reformatado.",
+      "properties": {
+        "tipo": {
+          "const": "code",
+          "default": "code",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "title": "Conteudo",
+          "type": "string"
+        },
+        "linguagem": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Linguagem"
+        },
+        "legenda": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "code_span": "#/$defs/CodeSpan",
+                    "emph": "#/$defs/Emph",
+                    "footnote": "#/$defs/Footnote",
+                    "strong": "#/$defs/Strong",
+                    "term_ref": "#/$defs/TermRef",
+                    "text": "#/$defs/Text"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Text"
+                  },
+                  {
+                    "$ref": "#/$defs/Emph"
+                  },
+                  {
+                    "$ref": "#/$defs/Strong"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeSpan"
+                  },
+                  {
+                    "$ref": "#/$defs/TermRef"
+                  },
+                  {
+                    "$ref": "#/$defs/Footnote"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Legenda"
+        },
+        "numerar_linhas": {
+          "default": false,
+          "title": "Numerar Linhas",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "CodeBlock",
+      "type": "object"
+    },
+    "CodeSpan": {
+      "additionalProperties": false,
+      "description": "Identificador ou trecho de codigo dentro do texto corrido.",
+      "properties": {
+        "tipo": {
+          "const": "code_span",
+          "default": "code_span",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "title": "Conteudo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "CodeSpan",
+      "type": "object"
+    },
+    "Definition": {
+      "additionalProperties": false,
+      "description": "Definicao canonica de um termo.\n\nFonte unica do glossario e do indice remissivo. O termo definido aqui e o\nalvo de todo `term_ref` que o cite.",
+      "properties": {
+        "tipo": {
+          "const": "definition",
+          "default": "definition",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "termo": {
+          "minLength": 1,
+          "title": "Termo",
+          "type": "string"
+        },
+        "definicao": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Definicao",
+          "type": "array"
+        },
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "ver_tambem": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ver Tambem",
+          "type": "array"
+        }
+      },
+      "required": [
+        "termo",
+        "definicao"
+      ],
+      "title": "Definition",
+      "type": "object"
+    },
+    "Emph": {
+      "additionalProperties": false,
+      "description": "Enfase leve (italico na maioria dos temas).",
+      "properties": {
+        "tipo": {
+          "const": "emph",
+          "default": "emph",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Conteudo",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "Emph",
+      "type": "object"
+    },
+    "Exercise": {
+      "additionalProperties": false,
+      "description": "Exercicio com enunciado e resposta opcional.",
+      "properties": {
+        "tipo": {
+          "const": "exercise",
+          "default": "exercise",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "enunciado": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "callout": "#/$defs/Callout",
+                "code": "#/$defs/CodeBlock",
+                "definition": "#/$defs/Definition",
+                "exercise": "#/$defs/Exercise",
+                "figure": "#/$defs/Figure",
+                "heading": "#/$defs/Heading",
+                "list": "#/$defs/ListBlock",
+                "paragraph": "#/$defs/Paragraph",
+                "table": "#/$defs/TableBlock"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Paragraph"
+              },
+              {
+                "$ref": "#/$defs/Heading"
+              },
+              {
+                "$ref": "#/$defs/ListBlock"
+              },
+              {
+                "$ref": "#/$defs/TableBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/Figure"
+              },
+              {
+                "$ref": "#/$defs/Callout"
+              },
+              {
+                "$ref": "#/$defs/Definition"
+              },
+              {
+                "$ref": "#/$defs/Exercise"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Enunciado",
+          "type": "array"
+        },
+        "dificuldade": {
+          "anyOf": [
+            {
+              "enum": [
+                "basico",
+                "intermediario",
+                "avancado"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dificuldade"
+        },
+        "resposta": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "callout": "#/$defs/Callout",
+                    "code": "#/$defs/CodeBlock",
+                    "definition": "#/$defs/Definition",
+                    "exercise": "#/$defs/Exercise",
+                    "figure": "#/$defs/Figure",
+                    "heading": "#/$defs/Heading",
+                    "list": "#/$defs/ListBlock",
+                    "paragraph": "#/$defs/Paragraph",
+                    "table": "#/$defs/TableBlock"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Paragraph"
+                  },
+                  {
+                    "$ref": "#/$defs/Heading"
+                  },
+                  {
+                    "$ref": "#/$defs/ListBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/TableBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/Figure"
+                  },
+                  {
+                    "$ref": "#/$defs/Callout"
+                  },
+                  {
+                    "$ref": "#/$defs/Definition"
+                  },
+                  {
+                    "$ref": "#/$defs/Exercise"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resposta"
+        }
+      },
+      "required": [
+        "id",
+        "enunciado"
+      ],
+      "title": "Exercise",
+      "type": "object"
+    },
+    "Figure": {
+      "additionalProperties": false,
+      "description": "Figura com texto alternativo obrigatorio.",
+      "properties": {
+        "tipo": {
+          "const": "figure",
+          "default": "figure",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "fonte": {
+          "minLength": 1,
+          "title": "Fonte",
+          "type": "string"
+        },
+        "alt": {
+          "minLength": 1,
+          "title": "Alt",
+          "type": "string"
+        },
+        "legenda": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "code_span": "#/$defs/CodeSpan",
+                    "emph": "#/$defs/Emph",
+                    "footnote": "#/$defs/Footnote",
+                    "strong": "#/$defs/Strong",
+                    "term_ref": "#/$defs/TermRef",
+                    "text": "#/$defs/Text"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Text"
+                  },
+                  {
+                    "$ref": "#/$defs/Emph"
+                  },
+                  {
+                    "$ref": "#/$defs/Strong"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeSpan"
+                  },
+                  {
+                    "$ref": "#/$defs/TermRef"
+                  },
+                  {
+                    "$ref": "#/$defs/Footnote"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Legenda"
+        },
+        "credito": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Credito"
+        }
+      },
+      "required": [
+        "fonte",
+        "alt"
+      ],
+      "title": "Figure",
+      "type": "object"
+    },
+    "Footnote": {
+      "additionalProperties": false,
+      "description": "Nota de rodape ancorada na posicao em que aparece.",
+      "properties": {
+        "tipo": {
+          "const": "footnote",
+          "default": "footnote",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Conteudo",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "Footnote",
+      "type": "object"
+    },
+    "Heading": {
+      "additionalProperties": false,
+      "description": "Titulo de secao. Alimenta o sumario paginado.",
+      "properties": {
+        "tipo": {
+          "const": "heading",
+          "default": "heading",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "nivel": {
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Nivel",
+          "type": "integer"
+        },
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Conteudo",
+          "type": "array"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        }
+      },
+      "required": [
+        "nivel",
+        "conteudo"
+      ],
+      "title": "Heading",
+      "type": "object"
+    },
+    "ListBlock": {
+      "additionalProperties": false,
+      "description": "Lista ordenada ou nao ordenada.",
+      "properties": {
+        "tipo": {
+          "const": "list",
+          "default": "list",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "ordenada": {
+          "default": false,
+          "title": "Ordenada",
+          "type": "boolean"
+        },
+        "itens": {
+          "items": {
+            "$ref": "#/$defs/ListItem"
+          },
+          "minItems": 1,
+          "title": "Itens",
+          "type": "array"
+        }
+      },
+      "required": [
+        "itens"
+      ],
+      "title": "ListBlock",
+      "type": "object"
+    },
+    "ListItem": {
+      "additionalProperties": false,
+      "description": "Item de lista, com aninhamento de um ou mais niveis.",
+      "properties": {
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Conteudo",
+          "type": "array"
+        },
+        "subitens": {
+          "items": {
+            "$ref": "#/$defs/ListItem"
+          },
+          "title": "Subitens",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "ListItem",
+      "type": "object"
+    },
+    "Meta": {
+      "additionalProperties": false,
+      "description": "Dados bibliograficos do livro.",
+      "properties": {
+        "titulo": {
+          "minLength": 1,
+          "title": "Titulo",
+          "type": "string"
+        },
+        "autor": {
+          "minLength": 1,
+          "title": "Autor",
+          "type": "string"
+        },
+        "subtitulo": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subtitulo"
+        },
+        "idioma": {
+          "default": "pt-BR",
+          "title": "Idioma",
+          "type": "string"
+        },
+        "versao_ir": {
+          "default": "0.1",
+          "title": "Versao Ir",
+          "type": "string"
+        }
+      },
+      "required": [
+        "titulo",
+        "autor"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "Paragraph": {
+      "additionalProperties": false,
+      "description": "Paragrafo de texto corrido.",
+      "properties": {
+        "tipo": {
+          "const": "paragraph",
+          "default": "paragraph",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Conteudo",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "Paragraph",
+      "type": "object"
+    },
+    "Strong": {
+      "additionalProperties": false,
+      "description": "Enfase forte (negrito na maioria dos temas).",
+      "properties": {
+        "tipo": {
+          "const": "strong",
+          "default": "strong",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Conteudo",
+          "type": "array"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "Strong",
+      "type": "object"
+    },
+    "TableBlock": {
+      "additionalProperties": false,
+      "description": "Tabela com cabecalho repetido a cada quebra de pagina.",
+      "properties": {
+        "tipo": {
+          "const": "table",
+          "default": "table",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "colunas": {
+          "items": {
+            "$ref": "#/$defs/TableColumn"
+          },
+          "minItems": 1,
+          "title": "Colunas",
+          "type": "array"
+        },
+        "linhas": {
+          "items": {
+            "items": {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "code_span": "#/$defs/CodeSpan",
+                    "emph": "#/$defs/Emph",
+                    "footnote": "#/$defs/Footnote",
+                    "strong": "#/$defs/Strong",
+                    "term_ref": "#/$defs/TermRef",
+                    "text": "#/$defs/Text"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Text"
+                  },
+                  {
+                    "$ref": "#/$defs/Emph"
+                  },
+                  {
+                    "$ref": "#/$defs/Strong"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeSpan"
+                  },
+                  {
+                    "$ref": "#/$defs/TermRef"
+                  },
+                  {
+                    "$ref": "#/$defs/Footnote"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "minItems": 1,
+          "title": "Linhas",
+          "type": "array"
+        },
+        "legenda": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "code_span": "#/$defs/CodeSpan",
+                    "emph": "#/$defs/Emph",
+                    "footnote": "#/$defs/Footnote",
+                    "strong": "#/$defs/Strong",
+                    "term_ref": "#/$defs/TermRef",
+                    "text": "#/$defs/Text"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Text"
+                  },
+                  {
+                    "$ref": "#/$defs/Emph"
+                  },
+                  {
+                    "$ref": "#/$defs/Strong"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeSpan"
+                  },
+                  {
+                    "$ref": "#/$defs/TermRef"
+                  },
+                  {
+                    "$ref": "#/$defs/Footnote"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Legenda"
+        },
+        "repetir_cabecalho": {
+          "default": true,
+          "title": "Repetir Cabecalho",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "colunas",
+        "linhas"
+      ],
+      "title": "TableBlock",
+      "type": "object"
+    },
+    "TableColumn": {
+      "additionalProperties": false,
+      "description": "Coluna de tabela: cabecalho, alinhamento e largura relativa opcional.",
+      "properties": {
+        "cabecalho": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "code_span": "#/$defs/CodeSpan",
+                "emph": "#/$defs/Emph",
+                "footnote": "#/$defs/Footnote",
+                "strong": "#/$defs/Strong",
+                "term_ref": "#/$defs/TermRef",
+                "text": "#/$defs/Text"
+              },
+              "propertyName": "tipo"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Text"
+              },
+              {
+                "$ref": "#/$defs/Emph"
+              },
+              {
+                "$ref": "#/$defs/Strong"
+              },
+              {
+                "$ref": "#/$defs/CodeSpan"
+              },
+              {
+                "$ref": "#/$defs/TermRef"
+              },
+              {
+                "$ref": "#/$defs/Footnote"
+              }
+            ]
+          },
+          "title": "Cabecalho",
+          "type": "array"
+        },
+        "alinhamento": {
+          "default": "esquerda",
+          "enum": [
+            "esquerda",
+            "centro",
+            "direita"
+          ],
+          "title": "Alinhamento",
+          "type": "string"
+        },
+        "largura": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Largura"
+        }
+      },
+      "required": [
+        "cabecalho"
+      ],
+      "title": "TableColumn",
+      "type": "object"
+    },
+    "TermRef": {
+      "additionalProperties": false,
+      "description": "Referencia a um termo definido por um bloco `definition`.\n\nAlimenta o indice remissivo e permite ao loop de consistencia detectar uso\nde termo antes da definicao.",
+      "properties": {
+        "tipo": {
+          "const": "term_ref",
+          "default": "term_ref",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "termo": {
+          "title": "Termo",
+          "type": "string"
+        },
+        "conteudo": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "code_span": "#/$defs/CodeSpan",
+                    "emph": "#/$defs/Emph",
+                    "footnote": "#/$defs/Footnote",
+                    "strong": "#/$defs/Strong",
+                    "term_ref": "#/$defs/TermRef",
+                    "text": "#/$defs/Text"
+                  },
+                  "propertyName": "tipo"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/Text"
+                  },
+                  {
+                    "$ref": "#/$defs/Emph"
+                  },
+                  {
+                    "$ref": "#/$defs/Strong"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeSpan"
+                  },
+                  {
+                    "$ref": "#/$defs/TermRef"
+                  },
+                  {
+                    "$ref": "#/$defs/Footnote"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conteudo"
+        }
+      },
+      "required": [
+        "termo"
+      ],
+      "title": "TermRef",
+      "type": "object"
+    },
+    "Text": {
+      "additionalProperties": false,
+      "description": "Caracteres literais, sem semantica adicional.",
+      "properties": {
+        "tipo": {
+          "const": "text",
+          "default": "text",
+          "title": "Tipo",
+          "type": "string"
+        },
+        "conteudo": {
+          "title": "Conteudo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "conteudo"
+      ],
+      "title": "Text",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Raiz do IR.",
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "bible": {
+      "$ref": "#/$defs/Bible"
+    },
+    "capitulos": {
+      "items": {
+        "$ref": "#/$defs/Chapter"
+      },
+      "minItems": 1,
+      "title": "Capitulos",
+      "type": "array"
+    }
+  },
+  "required": [
+    "meta",
+    "bible",
+    "capitulos"
+  ],
+  "title": "BookShelf IR",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
