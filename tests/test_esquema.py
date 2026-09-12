@@ -9,8 +9,8 @@ from typing import Any
 import pytest
 from pydantic import TypeAdapter
 
-from bookshelf.ir import VERSAO_IR, TIPOS_BLOCO, Book, RichText, Text
-from bookshelf.schema import escrever_json_schema, gerar_json_schema
+from sphinxtales.ir import VERSAO_IR, TIPOS_BLOCO, Book, RichText, Text
+from sphinxtales.schema import escrever_json_schema, gerar_json_schema
 
 _richtext = TypeAdapter(RichText)
 
@@ -53,4 +53,4 @@ def test_json_schema_declara_os_nove_blocos() -> None:
 def test_json_schema_e_escrito_em_utf8(tmp_path: Path) -> None:
     destino = escrever_json_schema(tmp_path / "sub" / "book.schema.json")
     carregado = json.loads(destino.read_text(encoding="utf-8"))
-    assert carregado["title"] == "BookShelf IR"
+    assert carregado["title"] == "SphinxTales IR"

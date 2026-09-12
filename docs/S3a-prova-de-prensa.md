@@ -17,14 +17,14 @@ do IR nem do renderizador, então pode ir para a gráfica hoje.
 ## Como gerar
 
 ```bash
-python -m bookshelf.cli prova
+python -m sphinxtales.cli prova
 ```
 
 Sai em `out/prova-de-prensa.pdf`, com o PostScript de origem ao lado. Todos os parâmetros têm
 valor padrão e todos podem mudar:
 
 ```bash
-python -m bookshelf.cli prova --formato 148x210 --sangria 5 --versao X-4
+python -m sphinxtales.cli prova --formato 148x210 --sangria 5 --versao X-4
 ```
 
 O comando roda nove conferências antes de terminar e sai com código 1 se qualquer uma falhar.

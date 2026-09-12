@@ -4,8 +4,8 @@ Formato de corte, sangria, marcas e perfil de saida sao parametros deste
 pacote, nunca constantes dele. Quem decide os valores e a grafica.
 """
 
-from bookshelf.prepress.geometria import Formato, mm
-from bookshelf.prepress.pdfx import (
+from sphinxtales.prepress.geometria import Formato, mm
+from sphinxtales.prepress.pdfx import (
     ConversaoFalhou,
     GhostscriptAusente,
     PerfilDeSaida,
@@ -13,7 +13,7 @@ from bookshelf.prepress.pdfx import (
     localizar_ghostscript,
     perfil_padrao_do_ghostscript,
 )
-from bookshelf.prepress.prova import OpcoesDaProva, gerar_postscript
+from sphinxtales.prepress.prova import OpcoesDaProva, gerar_postscript
 
 __all__ = [
     "ConversaoFalhou",

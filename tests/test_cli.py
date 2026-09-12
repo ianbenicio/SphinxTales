@@ -8,7 +8,7 @@ from typing import Any
 
 import pytest
 
-from bookshelf.cli import main
+from sphinxtales.cli import main
 
 
 def test_validate_aceita_o_exemplo(

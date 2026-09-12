@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from bookshelf.ir import Book
+from sphinxtales.ir import Book
 
 CAMINHO_PADRAO = Path("schemas/book.schema.json")
 
@@ -18,7 +18,7 @@ CAMINHO_PADRAO = Path("schemas/book.schema.json")
 def gerar_json_schema() -> dict[str, Any]:
     esquema = Book.model_json_schema(mode="validation")
     esquema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    esquema["title"] = "BookShelf IR"
+    esquema["title"] = "SphinxTales IR"
     return esquema
 
 

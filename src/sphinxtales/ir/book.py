@@ -14,8 +14,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from bookshelf.ir.blocks import Block
-from bookshelf.ir.walk import definicoes
+from sphinxtales.ir.blocks import Block
+from sphinxtales.ir.walk import definicoes
 
 VERSAO_IR = "0.1"
 

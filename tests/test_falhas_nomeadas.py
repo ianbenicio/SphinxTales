@@ -11,7 +11,7 @@ from typing import Any
 
 import pytest
 
-from bookshelf.validation import ErroDeValidacao, validar
+from sphinxtales.validation import ErroDeValidacao, validar
 
 
 def _caminhos(erro: ErroDeValidacao) -> list[str]:
@@ -164,7 +164,7 @@ def test_erro_reune_todos_os_problemas_nao_apenas_o_primeiro(
 
 
 def test_json_invalido_nomeia_linha_e_coluna(tmp_path: Any) -> None:
-    from bookshelf.validation import carregar
+    from sphinxtales.validation import carregar
 
     arquivo = tmp_path / "quebrado.json"
     arquivo.write_text('{"meta": {,}}', encoding="utf-8")

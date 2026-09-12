@@ -15,7 +15,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from bookshelf.prepress.geometria import Formato
+from sphinxtales.prepress.geometria import Formato
 
 TOLERANCIA_PT = 0.5
 

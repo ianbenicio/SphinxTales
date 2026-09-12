@@ -1,9 +1,9 @@
-# MVP BookShelf — plano v0.2
+# MVP SphinxTales — plano v0.2
 
 **Data:** 2026-09-10
 **Substitui:** v0.1 de 2026-08-28, [artefato](https://claude.ai/code/artifact/b306004c-441c-47f5-92f1-87a19bcc3307)
-**Origem das mudanças:** [Crítica do MVP BookShelf](https://claude.ai/code/artifact/fc1e0c1c-9eaf-4e83-9b56-bdbd17c97fb0), 2026-09-10
-**Companheiro de:** `claude/bookshelf-arquitetura-v0.1.md` e `claude/benchmark-competitivo.md`
+**Origem das mudanças:** [Crítica do MVP SphinxTales](https://claude.ai/code/artifact/fc1e0c1c-9eaf-4e83-9b56-bdbd17c97fb0), 2026-09-10
+**Companheiro de:** `claude/sphinxtales-arquitetura-v0.1.md` e `claude/benchmark-competitivo.md`
 
 ---
 

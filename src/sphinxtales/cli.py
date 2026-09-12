@@ -1,6 +1,6 @@
 """Interface de linha de comando.
 
-Toda capacidade do BookShelf e alcancavel pela CLI antes de ser alcancavel por
+Toda capacidade do SphinxTales e alcancavel pela CLI antes de ser alcancavel por
 qualquer outra coisa. Saida 0 significa aceito; saida 1 significa rejeitado com
 os problemas listados em stderr.
 """
@@ -12,8 +12,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from bookshelf.ir import percorrer_blocos
-from bookshelf.prepress import (
+from sphinxtales.ir import percorrer_blocos
+from sphinxtales.prepress import (
     ConversaoFalhou,
     Formato,
     GhostscriptAusente,
@@ -23,9 +23,9 @@ from bookshelf.prepress import (
     gerar_postscript,
     perfil_padrao_do_ghostscript,
 )
-from bookshelf.prepress.verificacao import conferir, tudo_passou
-from bookshelf.schema import CAMINHO_PADRAO, escrever_json_schema
-from bookshelf.validation import ErroDeValidacao, carregar
+from sphinxtales.prepress.verificacao import conferir, tudo_passou
+from sphinxtales.schema import CAMINHO_PADRAO, escrever_json_schema
+from sphinxtales.validation import ErroDeValidacao, carregar
 
 
 def _comando_validate(args: argparse.Namespace) -> int:
@@ -112,7 +112,7 @@ def _comando_prova(args: argparse.Namespace) -> int:
 
 def construir_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="bookshelf",
+        prog="sphinxtales",
         description="Producao editorial assistida: IR, diagramacao e prepress.",
     )
     subcomandos = parser.add_subparsers(dest="comando", required=True)

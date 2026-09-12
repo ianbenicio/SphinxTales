@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
-from bookshelf.ir.blocks import (
+from sphinxtales.ir.blocks import (
     Callout,
     CodeBlock,
     Definition,
@@ -22,7 +22,7 @@ from bookshelf.ir.blocks import (
     Paragraph,
     TableBlock,
 )
-from bookshelf.ir.inline import Emph, Footnote, Strong, TermRef
+from sphinxtales.ir.inline import Emph, Footnote, Strong, TermRef
 
 
 def percorrer_blocos(

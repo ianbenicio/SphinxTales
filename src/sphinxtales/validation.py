@@ -14,7 +14,7 @@ from typing import Any, Sequence
 
 from pydantic import ValidationError
 
-from bookshelf.ir import TIPOS_BLOCO, TIPOS_INLINE, Book
+from sphinxtales.ir import TIPOS_BLOCO, TIPOS_INLINE, Book
 
 _VARIANTES = TIPOS_BLOCO | TIPOS_INLINE
 

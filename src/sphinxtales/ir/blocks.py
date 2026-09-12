@@ -11,7 +11,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from bookshelf.ir.inline import RichText
+from sphinxtales.ir.inline import RichText
 
 AlinhamentoColuna = Literal["esquerda", "centro", "direita"]
 VarianteCallout = Literal["nota", "aviso", "dica", "importante", "exemplo"]

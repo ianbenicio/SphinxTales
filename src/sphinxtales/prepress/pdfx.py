@@ -85,7 +85,7 @@ def montar_definicao(titulo: str, perfil: PerfilDeSaida, versao: str) -> str:
         )
     rotulo, _ = VERSOES[versao]
     return f"""%!
-% Gerado por bookshelf.prepress.pdfx. Nao editar a mao.
+% Gerado por sphinxtales.prepress.pdfx. Nao editar a mao.
 
 [ /GTS_PDFXVersion ({rotulo})
   /Title ({_escapar(titulo)})

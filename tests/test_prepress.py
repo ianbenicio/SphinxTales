@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from bookshelf.prepress import (
+from sphinxtales.prepress import (
     Formato,
     OpcoesDaProva,
     PerfilDeSaida,
@@ -22,14 +22,14 @@ from bookshelf.prepress import (
     mm,
     perfil_padrao_do_ghostscript,
 )
-from bookshelf.prepress.imagem import codificar_para_postscript, gerar_raster
-from bookshelf.prepress.pdfx import (
+from sphinxtales.prepress.imagem import codificar_para_postscript, gerar_raster
+from sphinxtales.prepress.pdfx import (
     VERSOES,
     GhostscriptAusente,
     localizar_ghostscript,
     montar_definicao,
 )
-from bookshelf.prepress.verificacao import conferir, tudo_passou
+from sphinxtales.prepress.verificacao import conferir, tudo_passou
 
 
 def _ghostscript_disponivel() -> bool:

@@ -13,8 +13,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from bookshelf.prepress.geometria import Formato, mm
-from bookshelf.prepress.imagem import codificar_para_postscript, gerar_raster
+from sphinxtales.prepress.geometria import Formato, mm
+from sphinxtales.prepress.imagem import codificar_para_postscript, gerar_raster
 
 DPI_IMAGEM = 300
 
@@ -63,7 +63,7 @@ class OpcoesDaProva:
     """Tudo que a prova declara sobre si mesma no rodapé."""
 
     titulo: str = "Prova de prensa mínima"
-    projeto: str = "BookShelf"
+    projeto: str = "SphinxTales"
     condicao_impressao: str = "a definir com a gráfica"
     perfil: str = "a definir com a gráfica"
     data: str = ""
@@ -127,7 +127,7 @@ def _prologo(formato: Formato, opcoes: OpcoesDaProva) -> list[str]:
     return [
         "%!PS-Adobe-3.0",
         f"%%Title: {opcoes.titulo} - {opcoes.projeto}",
-        "%%Creator: bookshelf.prepress.prova",
+        "%%Creator: sphinxtales.prepress.prova",
         "%%LanguageLevel: 3",
         "%%Pages: 1",
         f"%%BoundingBox: 0 0 {largura:.0f} {altura:.0f}",

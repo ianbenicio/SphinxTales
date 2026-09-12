@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from bookshelf.ir import (
+from sphinxtales.ir import (
     TIPOS_BLOCO,
     TIPOS_INLINE,
     Book,
@@ -17,7 +17,7 @@ from bookshelf.ir import (
     percorrer_blocos,
     percorrer_inline,
 )
-from bookshelf.validation import carregar
+from sphinxtales.validation import carregar
 
 
 def test_exemplo_valida(caminho_exemplo: Path) -> None:

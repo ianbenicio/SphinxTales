@@ -48,7 +48,7 @@ consumir.
 ## Como verificar
 
 ```bash
-python -m bookshelf.cli validate examples/livro-exemplo.json
+python -m sphinxtales.cli validate examples/livro-exemplo.json
 ```
 
 Saída esperada: `aceito: ... - 2 capitulo(s), 19 bloco(s)`, código de saída 0.

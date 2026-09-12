@@ -5,7 +5,7 @@ diagramacao sem passar por aqui, e nada passa por aqui em silencio: campo
 desconhecido e erro, campo obrigatorio ausente e erro que nomeia o campo.
 """
 
-from bookshelf.ir.blocks import (
+from sphinxtales.ir.blocks import (
     TIPOS_BLOCO,
     Block,
     Callout,
@@ -20,7 +20,7 @@ from bookshelf.ir.blocks import (
     TableBlock,
     TableColumn,
 )
-from bookshelf.ir.book import (
+from sphinxtales.ir.book import (
     VERSAO_IR,
     Bible,
     Book,
@@ -28,7 +28,7 @@ from bookshelf.ir.book import (
     ChapterContract,
     Meta,
 )
-from bookshelf.ir.inline import (
+from sphinxtales.ir.inline import (
     TIPOS_INLINE,
     CodeSpan,
     Emph,
@@ -39,7 +39,7 @@ from bookshelf.ir.inline import (
     TermRef,
     Text,
 )
-from bookshelf.ir.walk import (
+from sphinxtales.ir.walk import (
     campos_richtext,
     definicoes,
     percorrer_blocos,

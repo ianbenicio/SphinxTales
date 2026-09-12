@@ -1419,7 +1419,7 @@
     "bible",
     "capitulos"
   ],
-  "title": "BookShelf IR",
+  "title": "SphinxTales IR",
   "type": "object",
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

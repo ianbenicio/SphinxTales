@@ -1,4 +1,4 @@
-# BookShelf
+# SphinxTales
 
 Produção editorial assistida: da entrevista com o autor ao arquivo que a gráfica aceita.
 
@@ -29,19 +29,19 @@ uv pip install -e ".[dev]"
 Validar um documento IR:
 
 ```bash
-python -m bookshelf.cli validate examples/livro-exemplo.json
+python -m sphinxtales.cli validate examples/livro-exemplo.json
 ```
 
 Exportar o JSON Schema derivado do esquema Pydantic:
 
 ```bash
-python -m bookshelf.cli schema
+python -m sphinxtales.cli schema
 ```
 
 Gerar a prova de prensa para a gráfica, já conferida:
 
 ```bash
-python -m bookshelf.cli prova
+python -m sphinxtales.cli prova
 ```
 
 Suíte de testes:
@@ -54,11 +54,11 @@ python -m pytest
 
 | Caminho | Papel |
 |---|---|
-| `src/bookshelf/ir/` | Esquema do IR: inline, blocos, documento, percursos |
-| `src/bookshelf/prepress/` | Geometria, prova de prensa, conversão PDF/X e conferência |
-| `src/bookshelf/validation.py` | Porta de entrada: valida e nomeia todo defeito |
-| `src/bookshelf/schema.py` | Exporta o JSON Schema a partir do Pydantic |
-| `src/bookshelf/cli.py` | Interface de linha de comando |
+| `src/sphinxtales/ir/` | Esquema do IR: inline, blocos, documento, percursos |
+| `src/sphinxtales/prepress/` | Geometria, prova de prensa, conversão PDF/X e conferência |
+| `src/sphinxtales/validation.py` | Porta de entrada: valida e nomeia todo defeito |
+| `src/sphinxtales/schema.py` | Exporta o JSON Schema a partir do Pydantic |
+| `src/sphinxtales/cli.py` | Interface de linha de comando |
 | `examples/livro-exemplo.json` | Livro escrito à mão que exercita o esquema inteiro |
 | `schemas/book.schema.json` | JSON Schema gerado, nunca editado à mão |
 | `docs/` | Registro por spec: o que foi decidido e como verificar |
