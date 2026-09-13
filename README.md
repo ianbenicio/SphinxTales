@@ -12,8 +12,8 @@ casca, e decide quando a interface aparece.
 | Spec | Estado |
 |---|---|
 | S1 — Esquema IR | construído |
+| S2 — Renderizador Typst | construído |
 | S3a — Prova de prensa mínima | arquivo pronto, aguardando parecer da gráfica |
-| S2 — Renderizador Typst | não iniciado |
 | S3b — Prepress do livro | bloqueado pelo gate G1 |
 | S4 a S11 | não iniciadas |
 
@@ -40,6 +40,12 @@ Exportar o JSON Schema derivado do esquema Pydantic:
 python -m sphinxtales.cli schema
 ```
 
+Diagramar o livro em PDF:
+
+```bash
+python -m sphinxtales.cli render examples/livro-exemplo.json
+```
+
 Gerar a prova de prensa para a gráfica, já conferida:
 
 ```bash
@@ -57,6 +63,7 @@ python -m pytest
 | Caminho | Papel |
 |---|---|
 | `src/sphinxtales/ir/` | Esquema do IR: inline, blocos, documento, percursos |
+| `src/sphinxtales/render/` | Tema, emissor de Typst e compilação do miolo em PDF |
 | `src/sphinxtales/prepress/` | Geometria, prova de prensa, conversão PDF/X e conferência |
 | `src/sphinxtales/validation.py` | Porta de entrada: valida e nomeia todo defeito |
 | `src/sphinxtales/schema.py` | Exporta o JSON Schema a partir do Pydantic |

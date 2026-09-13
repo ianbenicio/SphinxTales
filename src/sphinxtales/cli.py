@@ -24,8 +24,37 @@ from sphinxtales.prepress import (
     perfil_padrao_do_ghostscript,
 )
 from sphinxtales.prepress.verificacao import conferir, tudo_passou
+from sphinxtales.render import CompilacaoFalhou, Tema, contar_paginas, renderizar
 from sphinxtales.schema import CAMINHO_PADRAO, escrever_json_schema
 from sphinxtales.validation import ErroDeValidacao, carregar
+
+
+def _comando_render(args: argparse.Namespace) -> int:
+    """Diagrama o livro. Valida antes, porque IR invalido nao vira PDF."""
+    try:
+        livro = carregar(args.arquivo)
+    except ErroDeValidacao as erro:
+        print(str(erro), file=sys.stderr)
+        return 1
+    except OSError as erro:
+        print(f"nao foi possivel ler {args.arquivo}: {erro}", file=sys.stderr)
+        return 1
+
+    tema = Tema(largura_mm=args.largura, altura_mm=args.altura, corpo_pt=args.corpo)
+
+    try:
+        pdf, typst = renderizar(livro, args.saida, tema)
+    except CompilacaoFalhou as erro:
+        print(str(erro), file=sys.stderr)
+        return 1
+
+    print(
+        f"diagramado: {livro.meta.titulo} - {contar_paginas(typst)} pagina(s) em "
+        f"{tema.largura_mm:g} x {tema.altura_mm:g} mm"
+    )
+    print(f"PDF: {pdf}")
+    print(f"Typst: {typst}")
+    return 0
 
 
 def _comando_validate(args: argparse.Namespace) -> int:
@@ -157,6 +186,22 @@ def construir_parser() -> argparse.ArgumentParser:
         help="OutputConditionIdentifier declarado no OutputIntent",
     )
     prova.set_defaults(funcao=_comando_prova)
+
+    render = subcomandos.add_parser(
+        "render", help="diagrama um documento IR em PDF, via Typst"
+    )
+    render.add_argument("arquivo", type=Path)
+    render.add_argument("-o", "--saida", type=Path, default=Path("out/livro.pdf"))
+    render.add_argument(
+        "--largura", type=float, default=160.0, help="largura do corte em mm"
+    )
+    render.add_argument(
+        "--altura", type=float, default=230.0, help="altura do corte em mm"
+    )
+    render.add_argument(
+        "--corpo", type=float, default=10.5, help="corpo do texto em pontos"
+    )
+    render.set_defaults(funcao=_comando_render)
 
     return parser
 
