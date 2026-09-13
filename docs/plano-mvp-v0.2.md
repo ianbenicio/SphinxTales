@@ -55,7 +55,10 @@ no esquema, o trabalho para e o S1 é reaberto antes de o S2 avançar.
 
 **G2 — Ficha congelada antes do escritor.**
 Nenhuma linha de S7b antes de a ficha de pré-registro estar preenchida, datada e congelada, e do
-S7a estar rodando. A ficha está neste documento.
+S7a estar rodando. A ficha está neste documento. O
+[ADR-001](ADR-001-nucleo-casca-e-interface.md) acrescenta uma condição a este gate: os dois
+braços rodam por comando do núcleo, nunca por dentro da camada de condução, senão eles passam a
+diferir em mais coisas do que a presença de estado.
 
 **G3 — Volume real antes de declarar o S9 pronto.**
 O aceite provisório do S9 libera a etapa 2. O definitivo só é declarado com as tags que o S7b

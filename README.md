@@ -6,6 +6,8 @@ Este repositório segue a ordem de construção do plano de MVP: primeiro sem IA
 (esquema, diagramação, prepress), depois conhecimento, depois geração.
 
 Plano vigente: [docs/plano-mvp-v0.2.md](docs/plano-mvp-v0.2.md).
+Arquitetura: [ADR-001](docs/ADR-001-nucleo-casca-e-interface.md) separa o que é núcleo do que é
+casca, e decide quando a interface aparece.
 
 | Spec | Estado |
 |---|---|
