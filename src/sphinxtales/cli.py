@@ -41,6 +41,7 @@ from sphinxtales.tags import (
     Tag,
     TagNaoEncontrada,
     TipoDeTag,
+    consolidar,
     materializar,
 )
 from sphinxtales.validation import ErroDeValidacao, carregar
@@ -368,6 +369,29 @@ def _comando_tags_materializar(args: argparse.Namespace) -> int:
     return 0
 
 
+def _comando_tags_consolidar(args: argparse.Namespace) -> int:
+    """Funde duplicatas e promove padroes recorrentes. Passe periodico."""
+    acervo = _acervo_de(args)
+    relatorio = consolidar(acervo)
+    acervo.salvar(args.acervo)
+
+    if not relatorio.fusoes:
+        print("nada para consolidar")
+        return 0
+
+    for fusao in relatorio.fusoes:
+        rotulo = "promovida" if fusao.promovida else "fundida "
+        absorvidas = ", ".join(fusao.absorvidas)
+        print(f"{rotulo}  {fusao.sobrevivente}  <- {absorvidas}")
+
+    print(
+        f"\n{len(relatorio.fusoes)} fusao(oes) · "
+        f"{relatorio.tags_removidas} tag(s) removida(s) · "
+        f"{relatorio.tags_promovidas} promovida(s)"
+    )
+    return 0
+
+
 def construir_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="sphinxtales",
@@ -472,6 +496,12 @@ def construir_parser() -> argparse.ArgumentParser:
     )
     mat.add_argument("--camada", type=int, action="append")
     mat.set_defaults(funcao=_comando_tags_materializar)
+
+    consolidar_parser = acoes.add_parser(
+        "consolidar",
+        help="funde duplicatas e promove padroes recorrentes (passe periodico)",
+    )
+    consolidar_parser.set_defaults(funcao=_comando_tags_consolidar)
 
     referencias = subcomandos.add_parser(
         "referencias", help="sobe, decompoe e confirma as referencias do autor"

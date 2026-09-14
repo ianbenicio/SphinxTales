@@ -5,6 +5,12 @@ invariante de modelo, nao disciplina de quem escreve o codigo.
 """
 
 from sphinxtales.tags.acervo import Acervo, TagNaoEncontrada
+from sphinxtales.tags.consolidacao import (
+    Fusao,
+    RelatorioDeConsolidacao,
+    consolidar,
+    normalizar_forte,
+)
 from sphinxtales.tags.materializacao import (
     materializar,
     tags_materializaveis,
@@ -26,11 +32,15 @@ __all__ = [
     "CAMADA_LIVRO",
     "Confirmacao",
     "EstadoDaTag",
+    "Fusao",
+    "RelatorioDeConsolidacao",
     "Tag",
     "TagNaoEncontrada",
     "TipoDeTag",
+    "consolidar",
     "identificar",
     "materializar",
     "normalizar",
+    "normalizar_forte",
     "tags_materializaveis",
 ]

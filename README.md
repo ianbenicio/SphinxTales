@@ -16,12 +16,16 @@ casca, e decide quando a interface aparece.
 | S3a — Prova de prensa mínima | arquivo pronto, aguardando parecer da gráfica |
 | S4 — Taxonomia de tags | construído |
 | S6 — Referências por upload | construído |
+| S9 — Consolidação de tags | aceite provisório atendido, definitivo aguarda gate G3 |
 | S3b — Prepress do livro | bloqueado pelo gate G1 |
-| S5, S7 a S11 | não iniciadas |
+| S5, S7, S8, S10, S11 | não iniciadas |
 
 Três gates bloqueiam trabalho a jusante: parecer da gráfica antes do prepress do livro,
 ficha de pré-registro congelada antes do escritor com estado, e volume real antes de
 declarar a consolidação de tags pronta. Os três estão descritos no plano.
+
+Com S4, S6 e S9 provisório construídos, a **etapa 2 está fechada**. O próximo passo real,
+etapa 3, é o S5 (entrevista), seguido do S7a e do gate G2 antes do primeiro texto gerado.
 
 ## Rodar
 
@@ -66,7 +70,7 @@ python -m pytest
 |---|---|
 | `src/sphinxtales/ir/` | Esquema do IR: inline, blocos, documento, percursos |
 | `src/sphinxtales/render/` | Tema, emissor de Typst e compilação do miolo em PDF |
-| `src/sphinxtales/tags/` | Taxonomia fechada, ciclo de confirmação e materialização |
+| `src/sphinxtales/tags/` | Taxonomia fechada, ciclo de confirmação, consolidação e materialização |
 | `src/sphinxtales/referencias/` | Upload, decomposição confirmada e checklist para o loop |
 | `src/sphinxtales/confirmacao.py` | O ciclo que tags e referências compartilham |
 | `src/sphinxtales/prepress/` | Geometria, prova de prensa, conversão PDF/X e conferência |
