@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from sphinxtales.ir import percorrer_blocos
@@ -26,7 +26,17 @@ from sphinxtales.prepress import (
 from sphinxtales.prepress.verificacao import conferir, tudo_passou
 from sphinxtales.render import CompilacaoFalhou, Tema, contar_paginas, renderizar
 from sphinxtales.schema import CAMINHO_PADRAO, escrever_json_schema
+from sphinxtales.tags import (
+    Acervo,
+    EstadoDaTag,
+    Tag,
+    TagNaoEncontrada,
+    TipoDeTag,
+    materializar,
+)
 from sphinxtales.validation import ErroDeValidacao, carregar
+
+ACERVO_PADRAO = Path("tags.json")
 
 
 def _comando_render(args: argparse.Namespace) -> int:
@@ -139,6 +149,79 @@ def _comando_prova(args: argparse.Namespace) -> int:
     return 0
 
 
+def _acervo_de(args: argparse.Namespace) -> Acervo:
+    return Acervo.carregar(args.acervo)
+
+
+def _linha_da_tag(tag: Tag) -> str:
+    # Marca sempre visivel: uma coluna em branco desalinharia o resto da linha.
+    marca = {"proposta": "·", "confirmada": "✓", "recusada": "×"}[tag.estado.value]
+    quem = f" · {tag.confirmacao.autor}" if tag.confirmacao else ""
+    return f"{marca} {tag.id}  c{tag.camada}  {tag.tipo.value:<18} {tag.conteudo}{quem}"
+
+
+def _comando_tags_propor(args: argparse.Namespace) -> int:
+    acervo = _acervo_de(args)
+    tag = acervo.propor(TipoDeTag(args.tipo), args.conteudo, args.camada, args.origem)
+    acervo.salvar(args.acervo)
+    print(_linha_da_tag(tag))
+    if tag.estado is not EstadoDaTag.PROPOSTA:
+        print(f"(ja existia, estado {tag.estado.value})")
+    return 0
+
+
+def _comando_tags_confirmar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de(args)
+    try:
+        tag = acervo.confirmar(args.id, args.autor, datetime.now(timezone.utc))
+    except TagNaoEncontrada:
+        print(f"tag nao encontrada: {args.id}", file=sys.stderr)
+        return 1
+    acervo.salvar(args.acervo)
+    print(_linha_da_tag(tag))
+    return 0
+
+
+def _comando_tags_recusar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de(args)
+    try:
+        tag = acervo.recusar(args.id)
+    except TagNaoEncontrada:
+        print(f"tag nao encontrada: {args.id}", file=sys.stderr)
+        return 1
+    acervo.salvar(args.acervo)
+    print(_linha_da_tag(tag))
+    return 0
+
+
+def _comando_tags_listar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de(args)
+    tags = acervo.tags
+    if args.tipo:
+        tags = [t for t in tags if t.tipo is TipoDeTag(args.tipo)]
+    if args.camada is not None:
+        tags = [t for t in tags if t.camada == args.camada]
+    if args.estado:
+        tags = [t for t in tags if t.estado is EstadoDaTag(args.estado)]
+
+    for tag in sorted(tags, key=lambda t: (t.camada, t.tipo.value, t.conteudo)):
+        print(_linha_da_tag(tag))
+    print(f"{len(tags)} tag(s) · {len(acervo.confirmadas())} confirmada(s) no acervo")
+    return 0
+
+
+def _comando_tags_materializar(args: argparse.Namespace) -> int:
+    """Mostra exatamente o que chegaria ao gerador, e nada alem disso."""
+    acervo = _acervo_de(args)
+    camadas = set(args.camada) if args.camada else None
+    texto = materializar(acervo, camadas)
+    if not texto:
+        print("nenhuma tag confirmada, nada a materializar", file=sys.stderr)
+        return 1
+    print(texto, end="")
+    return 0
+
+
 def construir_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="sphinxtales",
@@ -202,6 +285,47 @@ def construir_parser() -> argparse.ArgumentParser:
         "--corpo", type=float, default=10.5, help="corpo do texto em pontos"
     )
     render.set_defaults(funcao=_comando_render)
+
+    tags = subcomandos.add_parser(
+        "tags", help="propoe, confirma e consulta as tags do projeto"
+    )
+    tags.add_argument(
+        "--acervo", type=Path, default=ACERVO_PADRAO, help="arquivo do acervo"
+    )
+    acoes = tags.add_subparsers(dest="acao", required=True)
+
+    tipos = [tipo.value for tipo in TipoDeTag]
+    estados = [estado.value for estado in EstadoDaTag]
+
+    propor = acoes.add_parser("propor", help="propoe uma tag, sem confirma-la")
+    propor.add_argument("--tipo", required=True, choices=tipos)
+    propor.add_argument("--conteudo", required=True)
+    propor.add_argument("--camada", type=int, default=1)
+    propor.add_argument("--origem", default="entrevista")
+    propor.set_defaults(funcao=_comando_tags_propor)
+
+    confirmar = acoes.add_parser(
+        "confirmar", help="registra quem confirmou a tag e quando"
+    )
+    confirmar.add_argument("id")
+    confirmar.add_argument("--autor", required=True)
+    confirmar.set_defaults(funcao=_comando_tags_confirmar)
+
+    recusar = acoes.add_parser("recusar", help="marca a tag como recusada")
+    recusar.add_argument("id")
+    recusar.set_defaults(funcao=_comando_tags_recusar)
+
+    listar = acoes.add_parser("listar", help="lista as tags, com filtros")
+    listar.add_argument("--tipo", choices=tipos)
+    listar.add_argument("--camada", type=int)
+    listar.add_argument("--estado", choices=estados)
+    listar.set_defaults(funcao=_comando_tags_listar)
+
+    mat = acoes.add_parser(
+        "materializar", help="mostra o contexto que chegaria ao gerador"
+    )
+    mat.add_argument("--camada", type=int, action="append")
+    mat.set_defaults(funcao=_comando_tags_materializar)
 
     return parser
 

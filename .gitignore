@@ -6,3 +6,6 @@ dist/
 build/
 *.egg-info/
 out/
+
+# Acervo de tags de um livro, nao da ferramenta.
+tags.json
