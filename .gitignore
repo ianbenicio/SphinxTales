@@ -7,5 +7,9 @@ build/
 *.egg-info/
 out/
 
-# Acervo de tags de um livro, nao da ferramenta.
-tags.json
+# Acervo e material de um livro, nao da ferramenta.
+# A barra inicial ancora na raiz: sem ela, `referencias/` engoliria
+# tambem o pacote em src/sphinxtales/referencias/.
+/tags.json
+/referencias.json
+/referencias/

@@ -15,8 +15,9 @@ casca, e decide quando a interface aparece.
 | S2 — Renderizador Typst | construído |
 | S3a — Prova de prensa mínima | arquivo pronto, aguardando parecer da gráfica |
 | S4 — Taxonomia de tags | construído |
+| S6 — Referências por upload | construído |
 | S3b — Prepress do livro | bloqueado pelo gate G1 |
-| S5 a S11 | não iniciadas |
+| S5, S7 a S11 | não iniciadas |
 
 Três gates bloqueiam trabalho a jusante: parecer da gráfica antes do prepress do livro,
 ficha de pré-registro congelada antes do escritor com estado, e volume real antes de
@@ -66,6 +67,8 @@ python -m pytest
 | `src/sphinxtales/ir/` | Esquema do IR: inline, blocos, documento, percursos |
 | `src/sphinxtales/render/` | Tema, emissor de Typst e compilação do miolo em PDF |
 | `src/sphinxtales/tags/` | Taxonomia fechada, ciclo de confirmação e materialização |
+| `src/sphinxtales/referencias/` | Upload, decomposição confirmada e checklist para o loop |
+| `src/sphinxtales/confirmacao.py` | O ciclo que tags e referências compartilham |
 | `src/sphinxtales/prepress/` | Geometria, prova de prensa, conversão PDF/X e conferência |
 | `src/sphinxtales/validation.py` | Porta de entrada: valida e nomeia todo defeito |
 | `src/sphinxtales/schema.py` | Exporta o JSON Schema a partir do Pydantic |

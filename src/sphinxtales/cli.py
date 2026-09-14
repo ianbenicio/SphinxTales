@@ -24,6 +24,15 @@ from sphinxtales.prepress import (
     perfil_padrao_do_ghostscript,
 )
 from sphinxtales.prepress.verificacao import conferir, tudo_passou
+from sphinxtales.referencias import (
+    AcervoDeReferencias,
+    Referencia,
+    ReferenciaNaoEncontrada,
+    SemDecomposicao,
+    TipoDeContribuicao,
+    checklist_do_acervo,
+)
+from sphinxtales.referencias import materializar as materializar_referencias
 from sphinxtales.render import CompilacaoFalhou, Tema, contar_paginas, renderizar
 from sphinxtales.schema import CAMINHO_PADRAO, escrever_json_schema
 from sphinxtales.tags import (
@@ -37,6 +46,8 @@ from sphinxtales.tags import (
 from sphinxtales.validation import ErroDeValidacao, carregar
 
 ACERVO_PADRAO = Path("tags.json")
+REFERENCIAS_PADRAO = Path("referencias.json")
+RAIZ_DE_REFERENCIAS = Path("referencias")
 
 
 def _comando_render(args: argparse.Namespace) -> int:
@@ -151,6 +162,141 @@ def _comando_prova(args: argparse.Namespace) -> int:
 
 def _acervo_de(args: argparse.Namespace) -> Acervo:
     return Acervo.carregar(args.acervo)
+
+
+def _acervo_de_referencias(args: argparse.Namespace) -> AcervoDeReferencias:
+    return AcervoDeReferencias.carregar(args.acervo)
+
+
+def _linha_da_referencia(referencia: Referencia) -> str:
+    marca = {"proposta": "·", "confirmada": "✓", "recusada": "×"}[
+        referencia.estado.value
+    ]
+    if referencia.decomposicao is None:
+        situacao = "sem decomposição"
+    else:
+        editados = len(referencia.decomposicao.itens_editados)
+        situacao = f"{len(referencia.decomposicao.itens)} item(ns)"
+        if editados:
+            situacao += f", {editados} reescrito(s)"
+    return (
+        f"{marca} {referencia.id}  {referencia.contribuicao.value:<15} "
+        f"{referencia.nome}  ({situacao})"
+    )
+
+
+def _comando_ref_subir(args: argparse.Namespace) -> int:
+    if not args.arquivo.exists():
+        print(f"arquivo nao encontrado: {args.arquivo}", file=sys.stderr)
+        return 1
+    acervo = _acervo_de_referencias(args)
+    referencia = acervo.subir(
+        args.arquivo, TipoDeContribuicao(args.contribuicao), args.raiz
+    )
+    acervo.salvar(args.acervo)
+    print(_linha_da_referencia(referencia))
+    return 0
+
+
+def _comando_ref_decompor(args: argparse.Namespace) -> int:
+    acervo = _acervo_de_referencias(args)
+    try:
+        referencia = acervo.decompor(args.id, args.item)
+    except ReferenciaNaoEncontrada:
+        print(f"referencia nao encontrada: {args.id}", file=sys.stderr)
+        return 1
+    acervo.salvar(args.acervo)
+    print(_linha_da_referencia(referencia))
+    return 0
+
+
+def _edicoes_de(pares: list[str] | None) -> dict[int, str]:
+    """Interpreta `--editar 2=novo texto` como {2: "novo texto"}."""
+    edicoes: dict[int, str] = {}
+    for par in pares or []:
+        ordem, _, texto = par.partition("=")
+        if not texto:
+            raise ValueError(f"edicao sem texto: {par!r}. Use ORDEM=texto novo")
+        edicoes[int(ordem)] = texto
+    return edicoes
+
+
+def _comando_ref_confirmar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de_referencias(args)
+    try:
+        edicoes = _edicoes_de(args.editar)
+    except ValueError as erro:
+        print(str(erro), file=sys.stderr)
+        return 1
+
+    try:
+        referencia = acervo.confirmar(
+            args.id, args.autor, datetime.now(timezone.utc), edicoes
+        )
+    except ReferenciaNaoEncontrada:
+        print(f"referencia nao encontrada: {args.id}", file=sys.stderr)
+        return 1
+    except SemDecomposicao as erro:
+        print(str(erro), file=sys.stderr)
+        return 1
+
+    acervo.salvar(args.acervo)
+    print(_linha_da_referencia(referencia))
+    if referencia.decomposicao is not None:
+        print(f"taxa de reescrita: {referencia.decomposicao.taxa_de_edicao:.0%}")
+    return 0
+
+
+def _comando_ref_recusar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de_referencias(args)
+    try:
+        referencia = acervo.recusar(args.id)
+    except ReferenciaNaoEncontrada:
+        print(f"referencia nao encontrada: {args.id}", file=sys.stderr)
+        return 1
+    acervo.salvar(args.acervo)
+    print(_linha_da_referencia(referencia))
+    return 0
+
+
+def _comando_ref_listar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de_referencias(args)
+    for referencia in acervo.referencias:
+        print(_linha_da_referencia(referencia))
+        if referencia.arquivo_mudou(args.raiz):
+            print(
+                f"  aviso: o arquivo de {referencia.id} mudou desde a decomposicao",
+                file=sys.stderr,
+            )
+    print(
+        f"{len(acervo.referencias)} referencia(s) · "
+        f"{len(acervo.confirmadas())} confirmada(s)"
+    )
+    return 0
+
+
+def _comando_ref_checklist(args: argparse.Namespace) -> int:
+    acervo = _acervo_de_referencias(args)
+    itens = checklist_do_acervo(acervo)
+    if not itens:
+        print(
+            "nenhum checklist: so referencia de estrutura confirmada gera itens",
+            file=sys.stderr,
+        )
+        return 1
+    for item in itens:
+        print(f"{item.referencia}  {item}")
+    return 0
+
+
+def _comando_ref_materializar(args: argparse.Namespace) -> int:
+    acervo = _acervo_de_referencias(args)
+    texto = materializar_referencias(acervo)
+    if not texto:
+        print("nenhuma referencia confirmada, nada a materializar", file=sys.stderr)
+        return 1
+    print(texto, end="")
+    return 0
 
 
 def _linha_da_tag(tag: Tag) -> str:
@@ -326,6 +472,60 @@ def construir_parser() -> argparse.ArgumentParser:
     )
     mat.add_argument("--camada", type=int, action="append")
     mat.set_defaults(funcao=_comando_tags_materializar)
+
+    referencias = subcomandos.add_parser(
+        "referencias", help="sobe, decompoe e confirma as referencias do autor"
+    )
+    referencias.add_argument(
+        "--acervo", type=Path, default=REFERENCIAS_PADRAO, help="arquivo do acervo"
+    )
+    referencias.add_argument(
+        "--raiz", type=Path, default=RAIZ_DE_REFERENCIAS, help="onde os arquivos ficam"
+    )
+    ref_acoes = referencias.add_subparsers(dest="acao", required=True)
+
+    contribuicoes = [tipo.value for tipo in TipoDeContribuicao]
+
+    subir = ref_acoes.add_parser("subir", help="copia um arquivo para o acervo")
+    subir.add_argument("arquivo", type=Path)
+    subir.add_argument("--contribuicao", required=True, choices=contribuicoes)
+    subir.set_defaults(funcao=_comando_ref_subir)
+
+    decompor = ref_acoes.add_parser(
+        "decompor", help="grava a decomposicao proposta, sem confirma-la"
+    )
+    decompor.add_argument("id")
+    decompor.add_argument(
+        "--item", action="append", required=True, help="um item, na ordem"
+    )
+    decompor.set_defaults(funcao=_comando_ref_decompor)
+
+    ref_confirmar = ref_acoes.add_parser(
+        "confirmar", help="confirma a decomposicao, registrando o que foi reescrito"
+    )
+    ref_confirmar.add_argument("id")
+    ref_confirmar.add_argument("--autor", required=True)
+    ref_confirmar.add_argument(
+        "--editar", action="append", metavar="ORDEM=TEXTO", help="reescreve um item"
+    )
+    ref_confirmar.set_defaults(funcao=_comando_ref_confirmar)
+
+    ref_recusar = ref_acoes.add_parser("recusar", help="marca a referencia recusada")
+    ref_recusar.add_argument("id")
+    ref_recusar.set_defaults(funcao=_comando_ref_recusar)
+
+    ref_listar = ref_acoes.add_parser("listar", help="lista as referencias")
+    ref_listar.set_defaults(funcao=_comando_ref_listar)
+
+    ref_checklist = ref_acoes.add_parser(
+        "checklist", help="itens cobraveis pelo loop, vindos das referencias de estrutura"
+    )
+    ref_checklist.set_defaults(funcao=_comando_ref_checklist)
+
+    ref_mat = ref_acoes.add_parser(
+        "materializar", help="mostra o contexto que chegaria ao gerador"
+    )
+    ref_mat.set_defaults(funcao=_comando_ref_materializar)
 
     return parser
 

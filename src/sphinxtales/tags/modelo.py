@@ -19,6 +19,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from sphinxtales.confirmacao import Confirmacao, EstadoDeConfirmacao, exigir_coerencia
+
 TAMANHO_DO_ID = 16
 
 CAMADA_LIVRO = 1
@@ -36,30 +38,9 @@ class TipoDeTag(StrEnum):
     PRE_REQUISITO = "pre_requisito"
 
 
-class EstadoDaTag(StrEnum):
-    """Onde a tag esta no ciclo propor, confirmar, vincular."""
-
-    PROPOSTA = "proposta"
-    CONFIRMADA = "confirmada"
-    RECUSADA = "recusada"
-
-
-class Confirmacao(BaseModel):
-    """Quem confirmou e quando. Sem isso nao ha tag confirmada."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    autor: str = Field(min_length=1)
-    em: datetime
-
-    @model_validator(mode="after")
-    def _data_precisa_de_fuso(self) -> Confirmacao:
-        if self.em.tzinfo is None:
-            raise ValueError(
-                "a data de confirmacao precisa declarar fuso horario, "
-                "senao o registro nao e comparavel entre maquinas"
-            )
-        return self
+# O ciclo e o mesmo que as referencias percorrem, entao ele vive em
+# `sphinxtales.confirmacao`. Aqui fica so o apelido com o nome do dominio.
+EstadoDaTag = EstadoDeConfirmacao
 
 
 def normalizar(conteudo: str) -> str:
@@ -92,15 +73,7 @@ class Tag(BaseModel):
 
     @model_validator(mode="after")
     def _confirmada_tem_registro(self) -> Tag:
-        confirmada = self.estado is EstadoDaTag.CONFIRMADA
-        if confirmada and self.confirmacao is None:
-            raise ValueError(
-                f"tag {self.id} esta confirmada sem registro de quem confirmou"
-            )
-        if not confirmada and self.confirmacao is not None:
-            raise ValueError(
-                f"tag {self.id} tem registro de confirmacao mas esta {self.estado.value}"
-            )
+        exigir_coerencia(self.estado, self.confirmacao, f"tag {self.id}")
         return self
 
     @model_validator(mode="after")
